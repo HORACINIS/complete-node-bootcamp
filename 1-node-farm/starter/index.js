@@ -1,6 +1,10 @@
 const fs = require('fs');
 const http = require('http');
-// const url = require('url');
+const url = require('url');
+const querystring = require('querystring');
+const replaceTemplate = require('./modules/replaceTemplate.js');
+
+
 
 // const creatingSomeFiles = () => {
 //   console.log('--------------------------------');
@@ -61,21 +65,10 @@ const http = require('http');
 //   });
 // });
 
+
+
+
 // HTTP STUFF ----------------------------------------------------------------------------------------
-const replaceTemplate = (temp, product) => {
-  let output = temp.replace(/{%PRODUCTNAME%}/g, product.productName);
-  output = output.replace(/{%IMAGE%}/g, product.image);
-  output = output.replace(/{%PRICE%}/g, product.price);
-  output = output.replace(/{%FROM%}/g, product.from);
-  output = output.replace(/{%NUTRIENTS%}/g, product.nutrients);
-  output = output.replace(/{%QUANTITY%}/g, product.quantity);
-  output = output.replace(/{%DESCRIPTION%}/g, product.description);
-  output = output.replace(/{%ID%}/g, product.id);
-
-  if (!product.organic) output = output.replace(/{%NOT_ORGANIC%}/g, 'not-organic')
-
-  return output;
-}
 
 const data = fs.readFileSync(`${__dirname}/dev-data/data.json`, 'utf-8');
 const dataObj = JSON.parse(data);
@@ -93,6 +86,20 @@ const server = http.createServer((req, res) => {
 
     const cardsHtml = dataObj.map(el => replaceTemplate(tempCard, el)).join('');
     const output = tempOverview.replace('{%PRODUCT_CARDS%}', cardsHtml);
+
+    // console.log('Printing URL');
+    // console.log(url);
+
+    // console.log('Printing QUERYSTRING');
+    // console.log(querystring);
+
+
+    // const baseURL = `http://${req.headers.host}`;
+    // const requestURL = new URL(req.url, baseURL);
+
+    // const pathname = requestURL.pathname;
+
+    // const query = requestURL.searchParams.get('id');
 
     res.end(output);
 
@@ -122,72 +129,3 @@ server.listen(8000, '127.0.0.1', () => {
   console.log('Server running on port 8000');
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// const fs = require('fs');
-// const http = require('http');
-// const url = require('url');
-
-
-// FILES -----------------------------------------------
-
-// Blocking, synchronous way
-// const textIn = fs.readFileSync('./txt/input.txt', 'utf-8');
-// console.log(textIn);
-
-// const textOut = `This is what we know about the avocado: ${textIn}\nCreated on ${Date.now()}`;
-// fs.writeFileSync('./txt/output.txt', textOut);
-// console.log(textOut);
-
-// Non-blocking, asynchronous way
-// fs.readFile('./txt/start.txt', 'utf-8', ((err, data1) => {
-//   if(err) return console.log('ERROR!!!')
-//   fs.readFile(`./txt/${data1}.txt`, 'utf-8', ((err, data2) => {
-//     console.log(data2)
-//     console.log('----------------------------')
-//     fs.readFile('./txt/append.txt', 'utf-8', ((err, data3) => {
-//       console.log(data3)
-//       console.log('----------------------------')
-
-//       fs.writeFile('./txt/final.txt', `${data2}\n${data3}`, 'utf-8', err => {
-//         console.log('Your file has been written')
-//       })
-//     }))
-//   }))
-// }))
-// console.log('Will read file');
-
-
-// SERVER ----------------------------------------------------
-// const server = http.createServer((req, res) => {
-//   const pathName = req.url;
-
-//   if (pathName === '/' || pathName === '/overview') {
-//     res.end('This is the OVERVIEW page')
-//   } else if (pathName === '/product') {
-//     res.end('This is the PRODUCTS page');
-//   } else {
-//     res.writeHead(404, {
-//       'Content-type': 'text/html',
-//       'my-own-property': 'Esta wea fallo'
-//     })
-//     res.end('<h1>Page not found</h1>');
-//   }
-//   console.log(pathName);
-// });
-
-// server.listen(8000, 'localhost', () => {
-//   console.log('Listening to requests on port 8000 ');
-// });
