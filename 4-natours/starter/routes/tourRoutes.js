@@ -3,6 +3,11 @@ const { getAllTours, createTour, getTour, updateTour, deleteTour } = require('..
 
 const router = express.Router();
 
+router.param('id', (req, res, next, val) => {
+  console.log(`TOUR ID IS: ${val}`);
+  next();
+});
+
 router
   .route('/')
   .get(getAllTours)
