@@ -9,7 +9,9 @@ const app = express();
 
 // 1.- MIDDLEWARES
 
-app.use(morgan('dev'));
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
 // This is called middlewear as it stands in between the request and the response
 // This is needed to modify the incoming request data
 app.use(express.json());
