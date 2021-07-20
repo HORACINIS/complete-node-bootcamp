@@ -13,6 +13,7 @@ app.use(morgan('dev'));
 // This is called middlewear as it stands in between the request and the response
 // This is needed to modify the incoming request data
 app.use(express.json());
+app.use(express.static(`${__dirname}/public`));
 
 // creating our own middleware function
 app.use((req, res, next) => {
