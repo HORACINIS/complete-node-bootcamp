@@ -24,15 +24,24 @@ const tourSchema = new mongoose.Schema({
   },
   rating: {
     type: Number,
-    default:  4.5
+    default: 4.5
   },
   price: {
     type: Number,
     required: [true, 'A tour must have a price']
-  } 
+  }
 });
 
 const Tour = mongoose.model('Tour', tourSchema); // Models start with a capital letter by convention
+
+const tourTest = new Tour({
+  name: 'The Park Camper',
+  price: 997
+});
+
+tourTest.save().then(doc => {
+  console.log(doc);
+}).catch(err => console.log('ERROR:', err));
 
 // prints development
 console.log(app.get('env'));
